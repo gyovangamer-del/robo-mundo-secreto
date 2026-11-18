@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7cc4ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mundo Secreto">
+<link rel="apple-touch-icon" href="icone-192.png">
+<link rel="icon" href="icone-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Mundo Secreto · Robô</title>
+<style>
+:root{--azul:#7cc4ff;--amarelo:#ffd678;--fundo:#fff8ec;--card:#ffffff;--tinta:#1d1d2b;--sub:#6b6b80;--ok:#2fb86b;--alerta:#f0a020;--erro:#e5484d;--borda:#1d1d2b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--tinta);font:16px/1.45 "Trebuchet MS",system-ui,-apple-system,sans-serif;padding-bottom:40px}
+header{background:var(--azul);border-bottom:4px solid var(--borda);padding:max(18px,env(safe-area-inset-top)) 18px 18px;display:flex;align-items:center;gap:14px}
+header img{width:72px;height:72px;border-radius:50%;border:4px solid var(--borda);background:#fff}
+header h1{margin:0;font-size:24px;line-height:1.1}header p{margin:2px 0 0;font-size:14px;font-weight:700;opacity:.8}
+main{padding:0 16px}
+.card{background:var(--card);border:3px solid var(--borda);border-radius:22px;padding:16px;margin:16px 0;box-shadow:0 5px 0 var(--borda)}
+.status{display:flex;align-items:center;gap:14px}
+.status img{width:64px;height:64px;border-radius:50%;border:3px solid var(--borda)}
+.grande{font-size:20px;font-weight:800}.sub{color:var(--sub);font-size:14px}
+.bola{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;border:2px solid var(--borda);vertical-align:middle}
+h2{margin:0 0 10px;font-size:18px}
+.numeros{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.numeros div{background:var(--fundo);border:2px solid var(--borda);border-radius:14px;padding:10px 4px}
+.numeros b{display:block;font-size:24px}.numeros span{font-size:12px;color:var(--sub);font-weight:700}
+.barra{height:14px;background:#eee;border:2px solid var(--borda);border-radius:10px;overflow:hidden;margin:8px 0}.barra i{display:block;height:100%;background:var(--ok)}
+a.botao{display:block;text-align:center;text-decoration:none;font-weight:800;font-size:17px;color:var(--tinta);background:var(--amarelo);border:3px solid var(--borda);border-radius:16px;padding:14px;margin-top:10px;box-shadow:0 4px 0 var(--borda)}
+a.botao.azul{background:var(--azul)}a.botao:active{transform:translateY(3px);box-shadow:0 1px 0 var(--borda)}
+.ep{padding:12px 0;border-top:2px dashed #ddd}.ep:first-of-type{border-top:0}
+.ep .t{font-weight:800}.ep .r{font-size:14px;color:var(--sub);margin:4px 0}
+.ep a{display:inline-block;margin-right:12px;font-weight:700;color:#1366c4;font-size:14px}
+.tag{font-size:12px;font-weight:800;border:2px solid var(--borda);border-radius:8px;padding:1px 6px;margin-right:6px;background:var(--amarelo)}
+.run{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid #eee;font-size:14px}.run:first-of-type{border-top:0}
+.dica{font-size:13px;color:var(--sub);margin-top:8px}
+</style>
+</head><body>
+<header><img src="lucas.png" alt="Lucas"><div><h1>Mundo Secreto</h1><p>Painel do robô de episódios</p></div></header>
+<main>
+<div class="card"><div class="status"><img id="carinha" src="pipo.png" alt="Pipo"><div>
+<div class="grande" id="situacao">Carregando…</div><div class="sub" id="detalhe"></div></div></div></div>
+
+<div class="card"><div class="numeros">
+<div><b id="nEps">–</b><span>episódios</span></div>
+<div><b id="nProx">–</b><span>próximo</span></div>
+<div><b id="nVozes">–</b><span>eps de voz</span></div></div>
+<div style="margin-top:14px"><div class="sub">Créditos de voz (ElevenLabs)</div><div class="barra"><i id="barra" style="width:0"></i></div><div class="sub" id="cota"></div></div></div>
+
+<div class="card"><h2>Controles</h2>
+<a class="botao" id="bAgora" target="_blank">▶ Fazer episódio agora</a>
+<a class="botao azul" id="bPausa" target="_blank">⏸ Pausar / ▶ Retomar o robô</a>
+<div class="dica">Os botões abrem o GitHub. Em "Fazer agora", toque em <b>Run workflow</b>. Pra pausar, toque nos <b>⋯</b> e em <b>Disable workflow</b>.</div></div>
+
+<div class="card"><h2>Últimas vezes que o robô rodou</h2><div id="runs" class="sub">Carregando…</div></div>
+<div class="card"><h2>Episódios</h2><div id="eps"></div></div>
+</main>
+<script>
+const REPO = 'gyovangamer-del/robo-mundo-secreto';
+const $ = id => document.getElementById(id);
+$('bAgora').href = $('bPausa').href = `https://github.com/${REPO}/actions/workflows/robo.yml`;
+const quando = iso => iso ? new Date(iso).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+function proximo18h(){ const a=new Date(); const p=new Date(a); p.setUTCHours(21,0,0,0); if(p<=a) p.setUTCDate(p.getUTCDate()+1); return p; }
+function texto(el, t){ el.textContent = t; return el; }
+async function carregar(){
+  try{
+    const est = await fetch(`https://raw.githubusercontent.com/${REPO}/main/estado.json?t=${Date.now()}`,{cache:'no-store'}).then(r=>r.json());
+    const eps = est.episodios || [];
+    $('nEps').textContent = eps.length;
+    const p = proximo18h(); $('nProx').textContent = p.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const e = est.eleven;
+    if(e){ const sobra=e.limite-e.usado, pct=Math.max(0,100*sobra/e.limite);
+      $('barra').style.width=pct+'%'; $('barra').style.background = pct<15?'var(--erro)':pct<40?'var(--alerta)':'var(--ok)';
+      $('cota').textContent=`Sobram ${sobra.toLocaleString('pt-BR')} de ${e.limite.toLocaleString('pt-BR')} caracteres. Se acabar, usa a voz grátis.`;
+      $('nVozes').textContent = Math.floor(sobra/850); }
+    else { $('cota').textContent='Aparece depois do próximo episódio.'; $('nVozes').textContent='?'; }
+    const box = $('eps'); box.innerHTML='';
+    eps.slice().reverse().forEach(ep=>{
+      const d=document.createElement('div'); d.className='ep';
+      const t=document.createElement('div'); t.className='t';
+      const tag=document.createElement('span'); tag.className='tag'; tag.textContent='Ep'+String(ep.numero).padStart(2,'0');
+      t.appendChild(tag); t.appendChild(document.createTextNode(ep.titulo||'')); d.appendChild(t);
+      d.appendChild(texto(Object.assign(document.createElement('div'),{className:'r'}), ep.resumo||''));
+      d.appendChild(texto(Object.assign(document.createElement('div'),{className:'sub'}), quando(ep.quando)));
+      for(const [k,n] of [['youtube','▶ YouTube'],['instagram','📷 Instagram']]){
+        if(ep[k] && String(ep[k]).startsWith('https://')){ const a=document.createElement('a'); a.href=ep[k]; a.target='_blank'; a.textContent=n; d.appendChild(a); } }
+      box.appendChild(d);
+    });
+    if(!eps.length) box.textContent='Nenhum episódio ainda.';
+  }catch(err){ $('cota').textContent='Não consegui ler os dados agora.'; }
+  try{
+    const j = await fetch(`https://api.github.com/repos/${REPO}/actions/runs?per_page=6`).then(r=>r.json());
+    const runs = j.workflow_runs || [];
+    const ult = runs[0];
+    const rodando = ult && ult.status !== 'completed';
+    const falhou = ult && ult.conclusion === 'failure';
+    $('situacao').innerHTML=''; const b=document.createElement('span'); b.className='bola';
+    b.style.background = rodando ? 'var(--alerta)' : falhou ? 'var(--erro)' : 'var(--ok)';
+    $('situacao').appendChild(b);
+    $('situacao').appendChild(document.createTextNode(rodando ? 'Fazendo um episódio agora…' : falhou ? 'A última vez deu erro' : 'Robô ligado'));
+    $('detalhe').textContent = rodando ? 'Começou ' + quando(ult.created_at) + '. Leva uns 10 minutos.'
+      : `Próximo episódio: ${quando(proximo18h().toISOString())}` + (falhou ? ' · toque em "Últimas vezes" pra ver o erro' : '');
+    $('carinha').src = falhou ? 'lucas.png' : 'pipo.png';
+    const box=$('runs'); box.innerHTML='';
+    runs.forEach(r=>{
+      const a=document.createElement('a'); a.className='run'; a.href=r.html_url; a.target='_blank'; a.style.color='inherit'; a.style.textDecoration='none';
+      const s = r.status!=='completed' ? '⏳ rodando' : r.conclusion==='success' ? '✅ deu certo' : r.conclusion==='cancelled' ? '⏹ cancelado' : '❌ erro';
+      a.appendChild(texto(document.createElement('span'), quando(r.created_at) + (r.event==='schedule'?' (automático)':' (manual)')));
+      a.appendChild(texto(document.createElement('b'), s)); box.appendChild(a);
+    });
+    if(!runs.length) box.textContent='Ainda não rodou.';
+  }catch(err){ $('situacao').textContent='Sem conexão'; }
+}
+carregar(); setInterval(carregar, 30000);
+</script>
+</body></html>

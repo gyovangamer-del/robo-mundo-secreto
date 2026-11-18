@@ -52,7 +52,7 @@ def main():
     if POSTAR:
         reg["youtube"] = youtube_postar(video, ep)
         print("Postado no YouTube:", reg["youtube"], flush=True)
-    e["episodios"].append(reg)
+    if POSTAR: e["episodios"].append(reg)  # teste (sem postar) não entra na memória da série
     try: e["eleven"] = eleven.conta()
     except Exception: pass
     salvar(e)
@@ -63,4 +63,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
