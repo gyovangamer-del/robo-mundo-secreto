@@ -1,0 +1,55 @@
+name: Robô Mundo Secreto
+
+on:
+  schedule:
+    - cron: "0 21 * * *"   # todo dia às 18:00 (horário de Brasília)
+  workflow_dispatch:
+    inputs:
+      postar:
+        description: "Postar no YouTube?"
+        type: choice
+        options: ["sim", "nao"]
+        default: "sim"
+
+concurrency:
+  group: robo
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  episodio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar ffmpeg e fontes
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+      - name: Instalar bibliotecas
+        run: pip install -q pillow numpy edge-tts google-api-python-client google-auth
+      - name: Fazer e postar o episódio
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          POSTAR_YOUTUBE: ${{ github.event.inputs.postar || 'sim' }}
+        run: python nuvem.py
+      - name: Guardar o vídeo (dá pra baixar por 30 dias)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video
+          path: videos/*.mp4
+          retention-days: 30
+          if-no-files-found: ignore
+      - name: Salvar a memória da série
+        run: |
+          git config user.name "robo-mundo-secreto"
+          git config user.email "robo@users.noreply.github.com"
+          git add estado.json
+          git commit -m "Episódio novo" || echo "nada novo"
+          git push
