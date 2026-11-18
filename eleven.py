@@ -1,7 +1,7 @@
 ﻿# Vozes do ElevenLabs pro robô 2D. Lê a chave de C:\Users\USUARIO\chave-elevenlabs.txt (nunca imprime).
 import json, os, sys, urllib.request
 
-CHAVE = (os.environ.get("ELEVENLABS_API_KEY") or open(os.path.join(os.path.expanduser("~"), "chave-elevenlabs.txt"), encoding="utf-8-sig").read()).strip()
+CHAVE = (os.environ.get("ELEVENLABS_API_KEY") or open(os.path.join(os.path.expanduser("~"), "chave-elevenlabs.txt"), encoding="utf-8-sig").read()).strip().lstrip("\ufeff")
 API = "https://api.elevenlabs.io"
 
 def _req(path, data=None):
@@ -29,4 +29,5 @@ def falar(texto, voice_id, arquivo, estab=.45, estilo=.35):
 if __name__ == "__main__":
     print(json.dumps(conta(), ensure_ascii=False))
     for v in biblioteca_pt(): print(v)
+
 

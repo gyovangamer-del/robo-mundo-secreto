@@ -1,4 +1,4 @@
-# Roda na nuvem (GitHub Actions): faz 1 episódio novo e posta no YouTube. O estado da série fica em estado.json (no repositório).
+﻿# Roda na nuvem (GitHub Actions): faz 1 episódio novo e posta no YouTube. O estado da série fica em estado.json (no repositório).
 # Segredos (variáveis de ambiente): GEMINI_API_KEY, ELEVENLABS_API_KEY, YOUTUBE_TOKEN_JSON.
 import json, os, sys, datetime as dt
 AQUI = os.path.dirname(os.path.abspath(__file__)); os.chdir(AQUI); sys.path.insert(0, AQUI)
@@ -21,7 +21,7 @@ def youtube_postar(video, ep):
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
     from googleapiclient.http import MediaFileUpload
-    cred = Credentials.from_authorized_user_info(json.loads(os.environ["YOUTUBE_TOKEN_JSON"]))
+    cred = Credentials.from_authorized_user_info(json.loads(os.environ["YOUTUBE_TOKEN_JSON"].strip().lstrip("\ufeff")))
     if not cred.valid: cred.refresh(Request())
     yt = build("youtube", "v3", credentials=cred, cache_discovery=False)
     desc = (ep.get("descricao") or ep["titulo"])
@@ -63,3 +63,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

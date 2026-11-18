@@ -1,9 +1,9 @@
-# IA do roteiro (Gemini). Chave: variável GEMINI_API_KEY (nuvem) ou ~/chave-gemini.txt (PC).
+﻿# IA do roteiro (Gemini). Chave: variável GEMINI_API_KEY (nuvem) ou ~/chave-gemini.txt (PC).
 import json, os, re, time, urllib.request, urllib.error
 
 
 def chave(var, arquivo):
-    if os.environ.get(var): return os.environ[var].strip()
+    if os.environ.get(var): return os.environ[var].strip().lstrip("\ufeff")
     p = os.path.join(os.path.expanduser("~"), arquivo)
     return open(p, encoding="utf-8-sig").read().strip() if os.path.exists(p) else None
 
@@ -44,3 +44,4 @@ def escrever_roteiro(prompt):
                 erro = e
         time.sleep(5)
     raise RuntimeError(f"o Gemini não respondeu: {erro}")
+
