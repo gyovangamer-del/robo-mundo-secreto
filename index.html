@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -90,7 +90,7 @@ async function carregar(){
     if(!eps.length) box.textContent='Nenhum episódio ainda.';
   }catch(err){ $('cota').textContent='Não consegui ler os dados agora.'; }
   try{
-    const j = await fetch(`https://api.github.com/repos/${REPO}/actions/runs?per_page=6`).then(r=>r.json());
+    const j = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/robo.yml/runs?per_page=6`).then(r=>r.json());
     const runs = j.workflow_runs || [];
     const ult = runs[0];
     const rodando = ult && ult.status !== 'completed';
@@ -115,3 +115,4 @@ async function carregar(){
 carregar(); setInterval(carregar, 30000);
 </script>
 </body></html>
+
