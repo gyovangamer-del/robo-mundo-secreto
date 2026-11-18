@@ -7,11 +7,19 @@
    "youtube": "https://youtube.com/shorts/M4h0gJSYpnU",
    "instagram": "https://www.instagram.com/ahistoriaembloquinhos/reel/Df3YYf2gBew/",
    "quando": "2026-11-17T22:59"
+  },
+  {
+   "numero": 2,
+   "titulo": "O Mistério da Tampa Gigante Ep02",
+   "resumo": "Uma tampa gigante fecha o mundo de Lucas, mergulhando tudo na escuridão. Nina percebe que Lucas se mexeu e o retira do pote com uma pinça para colocá-lo em uma prateleira.",
+   "duracao": 60.0,
+   "quando": "2026-11-18T18:51-03:00",
+   "youtube": "https://youtube.com/shorts/7uO-H3Fcke4"
   }
  ],
  "eleven": {
   "plano": "free",
-  "usado": 1857,
+  "usado": 3505,
   "limite": 10000
  }
 }
