@@ -15,11 +15,19 @@
    "duracao": 60.0,
    "quando": "2026-11-18T18:51-03:00",
    "youtube": "https://youtube.com/shorts/7uO-H3Fcke4"
+  },
+  {
+   "numero": 3,
+   "titulo": "Os Outros Potes da Estante Ep03",
+   "resumo": "Lucas e Pipo descobrem na estante de Nina que existem dezenas de outros potes com mundos dentro. Enquanto isso em Miudópolis, Tonho revela uma pista misteriosa enquanto dorme.",
+   "duracao": 59.9,
+   "quando": "2026-11-19T18:50-03:00",
+   "youtube": "https://youtube.com/shorts/AgbLALm-I-U"
   }
  ],
  "eleven": {
   "plano": "free",
-  "usado": 3505,
+  "usado": 4171,
   "limite": 10000
  }
 }
