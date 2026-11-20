@@ -23,11 +23,19 @@
    "duracao": 59.9,
    "quando": "2026-11-19T18:50-03:00",
    "youtube": "https://youtube.com/shorts/AgbLALm-I-U"
+  },
+  {
+   "numero": 4,
+   "titulo": "O Segredo do Pote Amarelo - Ep04",
+   "resumo": "Lucas e Pipo acharam uma chave dourada no Pote Amarelo seguindo as pistas do Tonho. Enquanto isso, Nina pegou o pote do mundo de Lucas para jogar no lixo e flagrou Lucas se mexendo na estante.",
+   "duracao": 55.8,
+   "quando": "2026-11-20T18:43-03:00",
+   "youtube": "https://youtube.com/shorts/hrl6O0Njuvc"
   }
  ],
  "eleven": {
   "plano": "free",
-  "usado": 4171,
+  "usado": 4833,
   "limite": 10000
  }
 }
